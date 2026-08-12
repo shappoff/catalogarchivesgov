@@ -36,6 +36,11 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# Yandex Object Storage upload credentials & resume state
+scripts/yc-upload/env.local
+scripts/yc-upload/.upload-state.json
+scripts/yc-upload/.upload-state.json.*.tmp
+
 # vercel
 .vercel
 

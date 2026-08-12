@@ -5,8 +5,9 @@ import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import { addArchivePointsLayers } from "./archive-points-layers";
+import { addCameraIcon } from "./camera-icon";
 import { useArchivePointsLayer } from "./useArchivePointsLayer";
-import { BELARUS_BOUNDS, OPEN_FREE_MAP_STYLE } from "./map-types";
+import { BELARUS_BOUNDS, MAP_ATTRIBUTION, OPEN_FREE_MAP_STYLE } from "./map-types";
 import styles from "./ArchiveMap.module.css";
 
 export default function ArchiveMap() {
@@ -26,7 +27,7 @@ export default function ArchiveMap() {
       style: OPEN_FREE_MAP_STYLE,
       bounds: BELARUS_BOUNDS,
       fitBoundsOptions: { padding: 48 },
-      attributionControl: { compact: true },
+      attributionControl: { compact: true, customAttribution: MAP_ATTRIBUTION },
     });
 
     mapRef.current = map;
@@ -42,9 +43,16 @@ export default function ArchiveMap() {
     popupRef.current = popup;
 
     map.on("load", () => {
-      addArchivePointsLayers(map, popup);
-      map.fitBounds(BELARUS_BOUNDS, { padding: 48, duration: 0 });
-      setMapReady(true);
+      void (async () => {
+        await addCameraIcon(map);
+        if (mapRef.current !== map) {
+          return;
+        }
+
+        addArchivePointsLayers(map, popup);
+        map.fitBounds(BELARUS_BOUNDS, { padding: 48, duration: 0 });
+        setMapReady(true);
+      })();
     });
 
     return () => {
@@ -58,5 +66,5 @@ export default function ArchiveMap() {
 
   useArchivePointsLayer(mapRef.current, popupRef.current, mapReady);
 
-  return <div ref={containerRef} className={styles.map} aria-label="Archive map" />;
+  return <div ref={containerRef} className={styles.map} aria-label="Карта архивных снимков" />;
 }

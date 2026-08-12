@@ -1,6 +1,7 @@
-import type { Map, Popup } from "maplibre-gl";
+import type { Map, MapLayerMouseEvent, Popup } from "maplibre-gl";
 import maplibregl from "maplibre-gl";
 
+import { CAMERA_ICON_ID } from "./camera-icon";
 import { buildPopupHtml } from "./map-popup";
 import {
   CLUSTER_COUNT_LAYER_ID,
@@ -58,24 +59,36 @@ export function addArchivePointsLayers(map: Map, popup: Popup): void {
 
   map.addLayer({
     id: UNCLUSTERED_LAYER_ID,
-    type: "circle",
+    type: "symbol",
     source: POINTS_SOURCE_ID,
     filter: ["!", ["has", "point_count"]],
-    paint: {
-      "circle-color": "#e03131",
-      "circle-radius": 5,
-      "circle-stroke-width": 1,
-      "circle-stroke-color": "#ffffff",
-      "circle-opacity": 0.9,
+    layout: {
+      "icon-image": CAMERA_ICON_ID,
+      "icon-size": 1,
+      "icon-allow-overlap": true,
+      "icon-ignore-placement": true,
     },
   });
 
+  const canvas = map.getCanvas();
+
   const setPointer = () => {
-    map.getCanvas().style.cursor = "pointer";
+    canvas.style.cursor = "pointer";
   };
 
   const clearPointer = () => {
-    map.getCanvas().style.cursor = "";
+    canvas.style.cursor = "";
+  };
+
+  const setUnclusteredHover = (event: MapLayerMouseEvent) => {
+    canvas.style.cursor = "pointer";
+    const place = (event.features?.[0]?.properties as PointProperties | undefined)?.p;
+    canvas.title = typeof place === "string" ? place : "";
+  };
+
+  const clearUnclusteredHover = () => {
+    canvas.style.cursor = "";
+    canvas.title = "";
   };
 
   map.on("click", CLUSTER_LAYER_ID, (event) => {
@@ -119,8 +132,10 @@ export function addArchivePointsLayers(map: Map, popup: Popup): void {
     popup.setLngLat(coordinates).setHTML(buildPopupHtml(properties)).addTo(map);
   });
 
-  for (const layerId of [CLUSTER_LAYER_ID, UNCLUSTERED_LAYER_ID]) {
-    map.on("mouseenter", layerId, setPointer);
-    map.on("mouseleave", layerId, clearPointer);
-  }
+  map.on("mouseenter", CLUSTER_LAYER_ID, setPointer);
+  map.on("mouseleave", CLUSTER_LAYER_ID, clearPointer);
+
+  map.on("mouseenter", UNCLUSTERED_LAYER_ID, setUnclusteredHover);
+  map.on("mousemove", UNCLUSTERED_LAYER_ID, setUnclusteredHover);
+  map.on("mouseleave", UNCLUSTERED_LAYER_ID, clearUnclusteredHover);
 }

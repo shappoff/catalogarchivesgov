@@ -4,10 +4,15 @@ export type PointProperties = {
   id: number | string;
   t: string;
   p: string;
-  d: string;
+  d: string | string[];
   urls: string[];
   n: number;
 };
+
+export const MAP_ATTRIBUTION =
+  'Немецкие аэрофотоснимки Беларуси времен ВОВ. С сайта <a target="_blank" rel="noopener noreferrer" href="https://catalog.archives.gov/">catalog.archives.gov</a>.';
+
+export const CATALOG_RECORD_URL = "https://catalog.archives.gov/id";
 
 export type ArchiveRegionId = "belarus" | "smolensk";
 

@@ -29,14 +29,31 @@ function roundCoord(value) {
 
 /**
  * @typedef {{
+ *   day?: string | number;
+ *   month?: string | number;
+ *   year?: string | number;
+ *   logicalDate?: string;
+ * }} ProductionDate
+ *
+ * @typedef {{
  *   naId?: number | string;
  *   title?: string;
  *   title2?: string;
  *   _geoloc?: { lat?: string | number; lng?: string | number };
  *   digitalObjects?: Array<{ objectUrl?: string }>;
- *   productionDates?: Array<{ logicalDate?: string }>;
+ *   productionDates?: ProductionDate[];
  * }} ArchiveRecord
  */
+
+/**
+ * @param {ProductionDate} date
+ * @returns {string}
+ */
+function formatProductionDate(date) {
+  return [date.day, date.month, date.year]
+    .filter((value) => value != null && value !== "")
+    .join(".");
+}
 
 /**
  * @param {string} inputFile
@@ -71,6 +88,10 @@ async function prepareDataset(inputFile, outputFile) {
       .map((object) => object.objectUrl)
       .filter((url) => typeof url === "string" && url.length > 0);
 
+    const dates = (record.productionDates ?? [])
+      .map(formatProductionDate)
+      .filter((value) => value.length > 0);
+
     features.push({
       type: "Feature",
       geometry: {
@@ -81,7 +102,7 @@ async function prepareDataset(inputFile, outputFile) {
         id: record.naId,
         t: record.title ?? "",
         p: record.title2 ?? "",
-        d: record.productionDates?.[0]?.logicalDate ?? "",
+        d: dates,
         urls,
         n: urls.length,
       },

@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "catalogarchivesgov",
-  description: "Catalog Archives Gov",
+  title: "Belarus Archive Map",
+  description:
+    "Interactive map of NARA cartographic archive objects over Belarus",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

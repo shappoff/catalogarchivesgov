@@ -1,8 +1,9 @@
 import ArchiveMapLoader from "@/components/map/ArchiveMapLoader";
+import styles from "./page.module.css";
 
 export default function Home() {
   return (
-    <main className="relative h-dvh w-full overflow-hidden">
+    <main className={styles.main}>
       <ArchiveMapLoader />
     </main>
   );

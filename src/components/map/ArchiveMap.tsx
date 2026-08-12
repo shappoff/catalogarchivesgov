@@ -13,6 +13,7 @@ import {
   UNCLUSTERED_LAYER_ID,
   type PointProperties,
 } from "./map-types";
+import styles from "./ArchiveMap.module.css";
 
 function escapeHtml(value: string): string {
   return value
@@ -226,5 +227,5 @@ export default function ArchiveMap() {
     };
   }, []);
 
-  return <div ref={containerRef} className="h-full w-full" aria-label="Archive map" />;
+  return <div ref={containerRef} className={styles.map} aria-label="Archive map" />;
 }

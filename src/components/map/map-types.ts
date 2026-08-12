@@ -14,6 +14,7 @@ export type ArchiveRegionId = "belarus" | "smolensk";
 export type ArchiveRegion = {
   id: ArchiveRegionId;
   path: string;
+  label: string;
   dataFile: string;
   bounds: [[number, number], [number, number]];
 };
@@ -47,12 +48,14 @@ export const ARCHIVE_REGIONS: Record<ArchiveRegionId, ArchiveRegion> = {
   belarus: {
     id: "belarus",
     path: "/belarus",
+    label: "Беларусь",
     dataFile: "belarus-points.geojson",
     bounds: BELARUS_BOUNDS,
   },
   smolensk: {
     id: "smolensk",
     path: "/smolensk",
+    label: "Смоленск",
     dataFile: "smolensk-points.geojson",
     bounds: SMOLENSK_BOUNDS,
   },
@@ -65,12 +68,14 @@ function normalizePath(pathname: string): string {
   return pathname;
 }
 
+export function isActivePath(pathname: string, href: string): boolean {
+  return normalizePath(pathname) === normalizePath(href);
+}
+
 /** Pathname has no basePath. Matches `/region` and `/region/`. */
 export function getArchiveRegion(pathname: string): ArchiveRegion | null {
-  const normalized = normalizePath(pathname);
-
   for (const region of Object.values(ARCHIVE_REGIONS)) {
-    if (normalized === region.path) {
+    if (isActivePath(pathname, region.path)) {
       return region;
     }
   }

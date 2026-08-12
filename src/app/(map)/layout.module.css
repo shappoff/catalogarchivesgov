@@ -1,8 +1,15 @@
 .shell {
-  position: relative;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100dvh;
   overflow: hidden;
+}
+
+.body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
 }
 
 .mapLayer {

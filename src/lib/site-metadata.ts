@@ -9,12 +9,28 @@ export const SMOLENSK_DESCRIPTION =
   "Немецкие аэрофотоснимки Смоленской области времен ВОВ. С сайта catalog.archives.gov.";
 
 export function getSiteUrl(): string {
-  if (process.env.NEXT_PUBLIC_SITE_URL) {
-    return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (explicit) {
+    return explicit.replace(/\/$/, "");
   }
 
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH?.trim() ?? "";
   return `https://shappoff.github.io${basePath}`.replace(/\/$/, "") || "https://shappoff.github.io";
+}
+
+/** Absolute URL with a trailing slash to match `trailingSlash: true`. */
+export function toAbsoluteUrl(pathname: string): string {
+  const origin = getSiteUrl();
+  if (pathname === "/") {
+    return `${origin}/`;
+  }
+
+  const withLeadingSlash = pathname.startsWith("/") ? pathname : `/${pathname}`;
+  return `${origin}${withLeadingSlash.replace(/\/$/, "")}/`;
+}
+
+export function getSitemapUrl(): string {
+  return `${getSiteUrl()}/sitemap.xml`;
 }
 
 export function createPageMetadata(

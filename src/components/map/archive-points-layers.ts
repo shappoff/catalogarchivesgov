@@ -21,7 +21,7 @@ export function addArchivePointsLayers(map: Map, popup: Popup): void {
     cluster: true,
     clusterMaxZoom: CLUSTER_MAX_ZOOM,
     clusterRadius: CLUSTER_RADIUS,
-    maxzoom: CLUSTER_MAX_ZOOM + 1,
+    maxzoom: CLUSTER_MAX_ZOOM,
   });
 
   map.addLayer({

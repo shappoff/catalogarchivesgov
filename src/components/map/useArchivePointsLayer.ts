@@ -1,40 +1,42 @@
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import type { FeatureCollection } from "geojson";
-import type { Map, Popup } from "maplibre-gl";
-import type { GeoJSONSource } from "maplibre-gl";
+import type { GeoJSONSource, Map as MapLibreMap, Popup } from "maplibre-gl";
 
 import {
   EMPTY_FEATURE_COLLECTION,
   POINTS_SOURCE_ID,
-  getBelarusPointsUrl,
-  isBelarusPath,
+  getArchivePointsUrl,
+  getArchiveRegion,
+  type ArchiveRegion,
+  type ArchiveRegionId,
 } from "./map-types";
 
-let belarusPointsCache: FeatureCollection | null = null;
+const pointsCache: Partial<Record<ArchiveRegionId, FeatureCollection>> = {};
 
-async function loadBelarusPoints(): Promise<FeatureCollection> {
-  if (belarusPointsCache) {
-    return belarusPointsCache;
+async function loadRegionPoints(region: ArchiveRegion): Promise<FeatureCollection> {
+  const cached = pointsCache[region.id];
+  if (cached) {
+    return cached;
   }
 
-  const response = await fetch(getBelarusPointsUrl());
+  const response = await fetch(getArchivePointsUrl(region));
   if (!response.ok) {
-    throw new Error(`Failed to load Belarus points: ${response.status}`);
+    throw new Error(`Failed to load ${region.id} points: ${response.status}`);
   }
 
   const data = (await response.json()) as FeatureCollection;
-  belarusPointsCache = data;
+  pointsCache[region.id] = data;
   return data;
 }
 
-export function useBelarusPointsLayer(
-  map: Map | null,
+export function useArchivePointsLayer(
+  map: MapLibreMap | null,
   popup: Popup | null,
   mapReady: boolean,
 ): void {
   const pathname = usePathname();
-  const active = isBelarusPath(pathname);
+  const region = getArchiveRegion(pathname);
   const requestIdRef = useRef(0);
 
   useEffect(() => {
@@ -49,13 +51,15 @@ export function useBelarusPointsLayer(
 
     const requestId = ++requestIdRef.current;
 
-    if (!active) {
+    if (!region) {
       source.setData(EMPTY_FEATURE_COLLECTION);
       popup?.remove();
       return;
     }
 
-    void loadBelarusPoints()
+    map.fitBounds(region.bounds, { padding: 48 });
+
+    void loadRegionPoints(region)
       .then((data) => {
         if (requestId !== requestIdRef.current) {
           return;
@@ -69,5 +73,5 @@ export function useBelarusPointsLayer(
         console.error(error);
         source.setData(EMPTY_FEATURE_COLLECTION);
       });
-  }, [active, map, mapReady, popup]);
+  }, [region, map, mapReady, popup]);
 }

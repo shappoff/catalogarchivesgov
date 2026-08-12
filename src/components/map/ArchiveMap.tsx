@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-import { addBelarusPointsLayers } from "./belarus-points-layers";
-import { useBelarusPointsLayer } from "./useBelarusPointsLayer";
+import { addArchivePointsLayers } from "./archive-points-layers";
+import { useArchivePointsLayer } from "./useArchivePointsLayer";
 import { BELARUS_BOUNDS, OPEN_FREE_MAP_STYLE } from "./map-types";
 import styles from "./ArchiveMap.module.css";
 
@@ -42,7 +42,7 @@ export default function ArchiveMap() {
     popupRef.current = popup;
 
     map.on("load", () => {
-      addBelarusPointsLayers(map, popup);
+      addArchivePointsLayers(map, popup);
       map.fitBounds(BELARUS_BOUNDS, { padding: 48, duration: 0 });
       setMapReady(true);
     });
@@ -56,7 +56,7 @@ export default function ArchiveMap() {
     };
   }, []);
 
-  useBelarusPointsLayer(mapRef.current, popupRef.current, mapReady);
+  useArchivePointsLayer(mapRef.current, popupRef.current, mapReady);
 
   return <div ref={containerRef} className={styles.map} aria-label="Archive map" />;
 }

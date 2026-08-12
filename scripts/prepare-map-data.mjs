@@ -3,9 +3,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const inputPath = path.join(root, "belarus.json");
 const outputDir = path.join(root, "public", "data");
-const outputPath = path.join(outputDir, "belarus-points.geojson");
+
+const DATASETS = [
+  { input: "belarus.json", output: "belarus-points.geojson" },
+  { input: "smolensk.json", output: "smolensk-points.geojson" },
+];
 
 /**
  * @param {unknown} value
@@ -35,58 +38,72 @@ function roundCoord(value) {
  * }} ArchiveRecord
  */
 
-const raw = await readFile(inputPath, "utf8");
-/** @type {ArchiveRecord[]} */
-const records = JSON.parse(raw);
+/**
+ * @param {string} inputFile
+ * @param {string} outputFile
+ */
+async function prepareDataset(inputFile, outputFile) {
+  const inputPath = path.join(root, inputFile);
+  const outputPath = path.join(outputDir, outputFile);
 
-if (!Array.isArray(records)) {
-  throw new Error("belarus.json must contain an array of records");
-}
+  const raw = await readFile(inputPath, "utf8");
+  /** @type {ArchiveRecord[]} */
+  const records = JSON.parse(raw);
 
-/** @type {GeoJSON.Feature[]} */
-const features = [];
-let skipped = 0;
-
-for (const record of records) {
-  const lat = toFiniteNumber(record._geoloc?.lat);
-  const lng = toFiniteNumber(record._geoloc?.lng);
-
-  if (lat === null || lng === null || record.naId == null) {
-    skipped += 1;
-    continue;
+  if (!Array.isArray(records)) {
+    throw new Error(`${inputFile} must contain an array of records`);
   }
 
-  const urls = (record.digitalObjects ?? [])
-    .map((object) => object.objectUrl)
-    .filter((url) => typeof url === "string" && url.length > 0);
+  /** @type {GeoJSON.Feature[]} */
+  const features = [];
+  let skipped = 0;
 
-  features.push({
-    type: "Feature",
-    geometry: {
-      type: "Point",
-      coordinates: [roundCoord(lng), roundCoord(lat)],
-    },
-    properties: {
-      id: record.naId,
-      t: record.title ?? "",
-      p: record.title2 ?? "",
-      d: record.productionDates?.[0]?.logicalDate ?? "",
-      urls,
-      n: urls.length,
-    },
-  });
+  for (const record of records) {
+    const lat = toFiniteNumber(record._geoloc?.lat);
+    const lng = toFiniteNumber(record._geoloc?.lng);
+
+    if (lat === null || lng === null || record.naId == null) {
+      skipped += 1;
+      continue;
+    }
+
+    const urls = (record.digitalObjects ?? [])
+      .map((object) => object.objectUrl)
+      .filter((url) => typeof url === "string" && url.length > 0);
+
+    features.push({
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [roundCoord(lng), roundCoord(lat)],
+      },
+      properties: {
+        id: record.naId,
+        t: record.title ?? "",
+        p: record.title2 ?? "",
+        d: record.productionDates?.[0]?.logicalDate ?? "",
+        urls,
+        n: urls.length,
+      },
+    });
+  }
+
+  /** @type {GeoJSON.FeatureCollection} */
+  const collection = {
+    type: "FeatureCollection",
+    features,
+  };
+
+  await writeFile(outputPath, JSON.stringify(collection));
+
+  console.log(
+    `Prepared ${features.length} points → ${path.relative(root, outputPath)}` +
+      (skipped ? ` (skipped ${skipped})` : ""),
+  );
 }
 
-/** @type {GeoJSON.FeatureCollection} */
-const collection = {
-  type: "FeatureCollection",
-  features,
-};
-
 await mkdir(outputDir, { recursive: true });
-await writeFile(outputPath, JSON.stringify(collection));
 
-console.log(
-  `Prepared ${features.length} points → ${path.relative(root, outputPath)}` +
-    (skipped ? ` (skipped ${skipped})` : ""),
-);
+for (const dataset of DATASETS) {
+  await prepareDataset(dataset.input, dataset.output);
+}

@@ -11,7 +11,7 @@ import {
   type PointProperties,
 } from "./map-types";
 
-export function addBelarusPointsLayers(map: Map, popup: Popup): void {
+export function addArchivePointsLayers(map: Map, popup: Popup): void {
   map.addSource(POINTS_SOURCE_ID, {
     type: "geojson",
     data: EMPTY_FEATURE_COLLECTION,

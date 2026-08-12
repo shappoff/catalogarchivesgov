@@ -18,7 +18,7 @@
 /out/
 
 # generated map data (created by scripts/prepare-map-data.mjs)
-/public/data/belarus-points.geojson
+/public/data/*
 
 # production
 /build

@@ -1,8 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import type { FeatureCollection } from "geojson";
 import type { GeoJSONSource, Map as MapLibreMap, Popup } from "maplibre-gl";
 
+import { getNaIdFromLocation } from "./item-hash";
+import { useArchiveItemHash } from "./useArchiveItemHash";
 import {
   EMPTY_FEATURE_COLLECTION,
   POINTS_SOURCE_ID,
@@ -38,6 +40,7 @@ export function useArchivePointsLayer(
   const pathname = usePathname();
   const region = getArchiveRegion(pathname);
   const requestIdRef = useRef(0);
+  const [points, setPoints] = useState<FeatureCollection | null>(null);
 
   useEffect(() => {
     if (!mapReady || !map) {
@@ -50,14 +53,16 @@ export function useArchivePointsLayer(
     }
 
     const requestId = ++requestIdRef.current;
+    setPoints(null);
 
     if (!region) {
       source.setData(EMPTY_FEATURE_COLLECTION);
-      popup?.remove();
       return;
     }
 
-    map.fitBounds(region.bounds, { padding: 48 });
+    if (!getNaIdFromLocation()) {
+      map.fitBounds(region.bounds, { padding: 48 });
+    }
 
     void loadRegionPoints(region)
       .then((data) => {
@@ -65,6 +70,7 @@ export function useArchivePointsLayer(
           return;
         }
         source.setData(data);
+        setPoints(data);
       })
       .catch((error: unknown) => {
         if (requestId !== requestIdRef.current) {
@@ -72,6 +78,9 @@ export function useArchivePointsLayer(
         }
         console.error(error);
         source.setData(EMPTY_FEATURE_COLLECTION);
+        setPoints(EMPTY_FEATURE_COLLECTION);
       });
-  }, [region, map, mapReady, popup]);
+  }, [region, map, mapReady]);
+
+  useArchiveItemHash(map, popup, mapReady, points);
 }

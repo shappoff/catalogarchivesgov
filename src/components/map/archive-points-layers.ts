@@ -1,11 +1,13 @@
 import type { Map, MapLayerMouseEvent, Popup } from "maplibre-gl";
 import maplibregl from "maplibre-gl";
 
+import { openSelectedArchiveItem, wrapLngToWorldCopy } from "./archive-item";
 import { CAMERA_ICON_ID } from "./camera-icon";
-import { buildPopupHtml } from "./map-popup";
 import {
   CLUSTER_COUNT_LAYER_ID,
   CLUSTER_LAYER_ID,
+  CLUSTER_MAX_ZOOM,
+  CLUSTER_RADIUS,
   EMPTY_FEATURE_COLLECTION,
   POINTS_SOURCE_ID,
   UNCLUSTERED_LAYER_ID,
@@ -17,9 +19,9 @@ export function addArchivePointsLayers(map: Map, popup: Popup): void {
     type: "geojson",
     data: EMPTY_FEATURE_COLLECTION,
     cluster: true,
-    clusterMaxZoom: 14,
-    clusterRadius: 50,
-    maxzoom: 14,
+    clusterMaxZoom: CLUSTER_MAX_ZOOM,
+    clusterRadius: CLUSTER_RADIUS,
+    maxzoom: CLUSTER_MAX_ZOOM,
   });
 
   map.addLayer({
@@ -125,11 +127,8 @@ export function addArchivePointsLayers(map: Map, popup: Popup): void {
       return;
     }
 
-    while (Math.abs(event.lngLat.lng - coordinates[0]) > 180) {
-      coordinates[0] += event.lngLat.lng > coordinates[0] ? 360 : -360;
-    }
-
-    popup.setLngLat(coordinates).setHTML(buildPopupHtml(properties)).addTo(map);
+    coordinates[0] = wrapLngToWorldCopy(coordinates[0], event.lngLat.lng);
+    openSelectedArchiveItem(map, popup, coordinates, properties);
   });
 
   map.on("mouseenter", CLUSTER_LAYER_ID, setPointer);

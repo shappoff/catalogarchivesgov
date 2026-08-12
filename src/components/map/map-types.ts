@@ -28,6 +28,8 @@ export const POINTS_SOURCE_ID = "archive-points";
 export const CLUSTER_LAYER_ID = "archive-clusters";
 export const CLUSTER_COUNT_LAYER_ID = "archive-cluster-count";
 export const UNCLUSTERED_LAYER_ID = "archive-unclustered";
+export const CLUSTER_MAX_ZOOM = 14;
+export const CLUSTER_RADIUS = 50;
 
 /** Bounding box covering all Belarus archive points [west, south, east, north]. */
 export const BELARUS_BOUNDS: [[number, number], [number, number]] = [

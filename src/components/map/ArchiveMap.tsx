@@ -6,6 +6,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 
 import { addArchivePointsLayers } from "./archive-points-layers";
 import { addCameraIcon } from "./camera-icon";
+import { getNaIdFromLocation } from "./item-hash";
 import { useArchivePointsLayer } from "./useArchivePointsLayer";
 import { BELARUS_BOUNDS, MAP_ATTRIBUTION, OPEN_FREE_MAP_STYLE } from "./map-types";
 import styles from "./ArchiveMap.module.css";
@@ -50,7 +51,9 @@ export default function ArchiveMap() {
         }
 
         addArchivePointsLayers(map, popup);
-        map.fitBounds(BELARUS_BOUNDS, { padding: 48, duration: 0 });
+        if (!getNaIdFromLocation()) {
+          map.fitBounds(BELARUS_BOUNDS, { padding: 48, duration: 0 });
+        }
         setMapReady(true);
       })();
     });

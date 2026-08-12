@@ -3,11 +3,11 @@ import type { Map, Popup } from "maplibre-gl";
 
 import { writeNaIdHash } from "./item-hash";
 import { buildPopupHtml } from "./map-popup";
-import { CLUSTER_MAX_ZOOM, type PointProperties } from "./map-types";
+import type { PointProperties } from "./map-types";
 
 export type ArchivePointFeature = Feature<Point, PointProperties>;
 
-const ITEM_FOCUS_ZOOM = CLUSTER_MAX_ZOOM + 1;
+const ITEM_FOCUS_ZOOM = 10;
 
 let focusRequestId = 0;
 
@@ -65,7 +65,7 @@ export function focusArchiveItem(
     wrapLngToWorldCopy(lng, map.getCenter().lng),
     lat,
   ];
-  const zoom = Math.max(map.getZoom(), ITEM_FOCUS_ZOOM);
+  const zoom = ITEM_FOCUS_ZOOM;
   const properties = feature.properties;
 
   const open = () => {

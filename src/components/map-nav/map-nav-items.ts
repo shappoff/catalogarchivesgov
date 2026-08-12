@@ -1,20 +1,24 @@
 import { ARCHIVE_REGIONS } from "@/components/map/map-types";
 
-export const HOME_NAV_ITEM = {
+export type MapNavItem = {
+  id: string;
+  href: string;
+  label: string;
+  icon?: "home";
+  /**
+   * Skip Next.js `basePath` (GitHub Pages project URL).
+   * `next/link` always prefixes href; a native `<a>` does not.
+   */
+  skipBasePath?: boolean;
+};
+
+export const HOME_NAV_ITEM: MapNavItem = {
   id: "home",
   href: "/",
   label: "На главную",
   icon: "home",
-} as const;
-
-export type MapNavItem =
-  | typeof HOME_NAV_ITEM
-  | {
-      id: string;
-      href: string;
-      label: string;
-      icon?: never;
-    };
+  skipBasePath: true,
+};
 
 export const MAP_NAV_ITEMS: MapNavItem[] = [
   HOME_NAV_ITEM,

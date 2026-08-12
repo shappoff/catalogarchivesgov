@@ -6,8 +6,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputDir = path.join(root, "public", "data");
 
 const DATASETS = [
-  { input: "belarus.json", output: "belarus-points.geojson" },
-  { input: "smolensk.json", output: "smolensk-points.geojson" },
+  { input: "data/belarus.json", output: "belarus-points.geojson" },
+  { input: "data/smolensk.json", output: "smolensk-points.geojson" },
 ];
 
 /**

@@ -13,8 +13,16 @@ npm run dev
 
 ## Сборка
 
+Локально без префикса:
+
 ```bash
 npm run build
+```
+
+С префиксом как на GitHub Pages:
+
+```bash
+BASE_PATH=/catalogarchivesgov npm run build
 ```
 
 Статика попадает в `out/`. Предпросмотр:

@@ -1,8 +1,6 @@
 import type { NextConfig } from "next";
 
-const isGithubPages = process.env.GITHUB_ACTIONS === "true";
-const repository = process.env.GITHUB_REPOSITORY?.replace(/.*\//, "") ?? "";
-const basePath = isGithubPages && repository ? `/${repository}` : "";
+const basePath = process.env.BASE_PATH ?? "";
 
 const nextConfig: NextConfig = {
   output: "export",
@@ -10,8 +8,8 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  basePath,
-  assetPrefix: basePath ? `${basePath}/` : undefined,
+  basePath: basePath || undefined,
+  assetPrefix: basePath || undefined,
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
   },

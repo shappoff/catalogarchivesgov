@@ -16,6 +16,10 @@ export const PSKOV_TITLE = "Карта аэрофотосъемки Псковс
 export const PSKOV_DESCRIPTION =
   "Немецкие аэрофотоснимки Псковской области времен ВОВ. С сайта catalog.archives.gov.";
 
+export const LITHUANIA_TITLE = "Карта аэрофотосъемки Литвы времен ВОВ";
+export const LITHUANIA_DESCRIPTION =
+  "Немецкие аэрофотоснимки Литвы времен ВОВ. С сайта catalog.archives.gov.";
+
 export function getSiteUrl(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   if (explicit) {

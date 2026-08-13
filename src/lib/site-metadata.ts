@@ -12,6 +12,10 @@ export const BRYANSK_TITLE = "Карта аэрофотосъемки Брянс
 export const BRYANSK_DESCRIPTION =
   "Немецкие аэрофотоснимки Брянской области времен ВОВ. С сайта catalog.archives.gov.";
 
+export const PSKOV_TITLE = "Карта аэрофотосъемки Псковской области времен ВОВ";
+export const PSKOV_DESCRIPTION =
+  "Немецкие аэрофотоснимки Псковской области времен ВОВ. С сайта catalog.archives.gov.";
+
 export function getSiteUrl(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   if (explicit) {

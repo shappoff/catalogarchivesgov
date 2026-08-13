@@ -18,7 +18,6 @@
 /out/
 
 # generated map data (created by scripts/prepare-map-data.mjs)
-/public/data/*
 
 # production
 /build

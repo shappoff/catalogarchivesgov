@@ -61,7 +61,7 @@ export const ARCHIVE_REGIONS: Record<ArchiveRegionId, ArchiveRegion> = {
     dataFile: "belarus-points.geojson",
     bounds: BELARUS_BOUNDS,
     imageBaseUrl:
-      "https://s3.dualstack.us-east-1.amazonaws.com/NARAprodstorage/lz/cartographic/rg-373/306065/Batch0017/",
+      "https://storage.yandexcloud.net/catalogarchivesgov/belarus/",
   },
   smolensk: {
     id: "smolensk",

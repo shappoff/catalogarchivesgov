@@ -1,5 +1,4 @@
-import type { Map, MapLayerMouseEvent, Popup } from "maplibre-gl";
-import maplibregl from "maplibre-gl";
+import type { GeoJSONSource, Map, MapLayerMouseEvent, Popup } from "maplibre-gl";
 
 import { openSelectedArchiveItem, wrapLngToWorldCopy } from "./archive-item";
 import { CAMERA_ICON_ID } from "./camera-icon";
@@ -100,7 +99,7 @@ export function addArchivePointsLayers(map: Map, popup: Popup): void {
     }
 
     const clusterId = feature.properties?.cluster_id;
-    const source = map.getSource(POINTS_SOURCE_ID) as maplibregl.GeoJSONSource | undefined;
+    const source = map.getSource(POINTS_SOURCE_ID) as GeoJSONSource | undefined;
     if (typeof clusterId !== "number" || !source) {
       return;
     }

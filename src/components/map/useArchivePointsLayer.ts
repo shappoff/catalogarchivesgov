@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { usePathname } from "next/navigation";
 import type { FeatureCollection } from "geojson";
 import type { GeoJSONSource, Map as MapLibreMap, Popup } from "maplibre-gl";
@@ -35,17 +35,27 @@ async function loadRegionPoints(region: ArchiveRegion): Promise<FeatureCollectio
 }
 
 export function useArchivePointsLayer(
-  map: MapLibreMap | null,
-  popup: Popup | null,
+  mapRef: RefObject<MapLibreMap | null>,
+  popupRef: RefObject<Popup | null>,
   mapReady: boolean,
 ): void {
   const pathname = usePathname();
   const region = getArchiveRegion(pathname);
   const requestIdRef = useRef(0);
-  const [points, setPoints] = useState<FeatureCollection | null>(null);
+  const [loaded, setLoaded] = useState<{
+    regionId: ArchiveRegionId;
+    points: FeatureCollection;
+  } | null>(null);
+
+  const points = region && loaded?.regionId === region.id ? loaded.points : null;
 
   useEffect(() => {
-    if (!mapReady || !map) {
+    if (!mapReady) {
+      return;
+    }
+
+    const map = mapRef.current;
+    if (!map) {
       return;
     }
 
@@ -55,7 +65,6 @@ export function useArchivePointsLayer(
     }
 
     const requestId = ++requestIdRef.current;
-    setPoints(null);
 
     if (!region) {
       source.setData(EMPTY_FEATURE_COLLECTION);
@@ -72,7 +81,7 @@ export function useArchivePointsLayer(
           return;
         }
         source.setData(data);
-        setPoints(data);
+        setLoaded({ regionId: region.id, points: data });
       })
       .catch((error: unknown) => {
         if (requestId !== requestIdRef.current) {
@@ -80,9 +89,9 @@ export function useArchivePointsLayer(
         }
         console.error(error);
         source.setData(EMPTY_FEATURE_COLLECTION);
-        setPoints(EMPTY_FEATURE_COLLECTION);
+        setLoaded({ regionId: region.id, points: EMPTY_FEATURE_COLLECTION });
       });
-  }, [region, map, mapReady]);
+  }, [region, mapReady, mapRef]);
 
-  useArchiveItemHash(map, popup, mapReady, points);
+  useArchiveItemHash(mapRef, popupRef, mapReady, points);
 }

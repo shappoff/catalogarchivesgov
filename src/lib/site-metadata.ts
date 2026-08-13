@@ -28,6 +28,10 @@ export const MOSCOW_TITLE = "Карта аэрофотосъемки Москв�
 export const MOSCOW_DESCRIPTION =
   "Немецкие аэрофотоснимки Москвы времен ВОВ. С сайта catalog.archives.gov.";
 
+export const UKRAINE_TITLE = "Карта аэрофотосъемки Украины времен ВОВ";
+export const UKRAINE_DESCRIPTION =
+  "Немецкие аэрофотоснимки Украины времен ВОВ. С сайта catalog.archives.gov.";
+
 export function getSiteUrl(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   if (explicit) {

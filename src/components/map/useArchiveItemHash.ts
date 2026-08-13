@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 import type { FeatureCollection } from "geojson";
 import type { Map as MapLibreMap, Popup } from "maplibre-gl";
 
@@ -16,8 +16,8 @@ function closePopupQuietly(popup: Popup, skipHashSyncRef: { current: boolean }):
 }
 
 export function useArchiveItemHash(
-  map: MapLibreMap | null,
-  popup: Popup | null,
+  mapRef: RefObject<MapLibreMap | null>,
+  popupRef: RefObject<Popup | null>,
   mapReady: boolean,
   points: FeatureCollection | null,
 ): void {
@@ -25,6 +25,7 @@ export function useArchiveItemHash(
   const didRestoreRef = useRef(false);
 
   useEffect(() => {
+    const popup = popupRef.current;
     if (!popup) {
       return;
     }
@@ -39,9 +40,11 @@ export function useArchiveItemHash(
     return () => {
       popup.off("close", onClose);
     };
-  }, [popup]);
+  }, [popupRef, mapReady]);
 
   useEffect(() => {
+    const map = mapRef.current;
+    const popup = popupRef.current;
     if (!mapReady || !map || !popup) {
       return;
     }
@@ -74,5 +77,5 @@ export function useArchiveItemHash(
     return () => {
       window.removeEventListener("hashchange", applyHash);
     };
-  }, [map, popup, mapReady, points]);
+  }, [mapRef, popupRef, mapReady, points]);
 }

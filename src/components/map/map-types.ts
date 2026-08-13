@@ -30,7 +30,8 @@ export type ArchiveRegionId =
   | "pskov"
   | "lithuania"
   | "latvia"
-  | "moscow";
+  | "moscow"
+  | "ukraine";
 
 export type ArchiveRegion = {
   id: ArchiveRegionId;
@@ -88,6 +89,12 @@ export const LATVIA_BOUNDS: [[number, number], [number, number]] = [
 export const MOSCOW_BOUNDS: [[number, number], [number, number]] = [
   [32.14, 55.57],
   [37.98, 56.91],
+];
+
+/** Bounding box covering all Ukraine archive points [west, south, east, north]. */
+export const UKRAINE_BOUNDS: [[number, number], [number, number]] = [
+  [23.69, 47.54],
+  [36.25, 51.21],
 ];
 
 export const OPEN_FREE_MAP_STYLE =
@@ -149,6 +156,13 @@ export const ARCHIVE_REGIONS: Record<ArchiveRegionId, ArchiveRegion> = {
     label: "Латвия",
     dataFile: "latvia-points.geojson",
     bounds: LATVIA_BOUNDS,
+  },
+  ukraine: {
+    id: "ukraine",
+    path: "/ukraine",
+    label: "Украина",
+    dataFile: "ukraine-points.geojson",
+    bounds: UKRAINE_BOUNDS,
   },
 };
 

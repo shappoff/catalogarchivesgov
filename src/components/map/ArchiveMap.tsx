@@ -1,21 +1,22 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import maplibregl from "maplibre-gl";
+import { Map, NavigationControl, Popup } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import { addArchivePointsLayers } from "./archive-points-layers";
 import { addCameraIcon } from "./camera-icon";
 import { getNaIdFromLocation } from "./item-hash";
 import { sanitizeMapStyle } from "./sanitize-map-style";
+import { ensureMaplibreWorker } from "./setup-maplibre";
 import { useArchivePointsLayer } from "./useArchivePointsLayer";
 import { BELARUS_BOUNDS, MAP_ATTRIBUTION, OPEN_FREE_MAP_STYLE } from "./map-types";
 import styles from "./ArchiveMap.module.css";
 
 export default function ArchiveMap() {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const mapRef = useRef<maplibregl.Map | null>(null);
-  const popupRef = useRef<maplibregl.Popup | null>(null);
+  const mapRef = useRef<Map | null>(null);
+  const popupRef = useRef<Popup | null>(null);
   const [mapReady, setMapReady] = useState(false);
 
   useEffect(() => {
@@ -24,7 +25,9 @@ export default function ArchiveMap() {
       return;
     }
 
-    const map = new maplibregl.Map({
+    ensureMaplibreWorker();
+
+    const map = new Map({
       container,
       bounds: BELARUS_BOUNDS,
       fitBoundsOptions: { padding: 48 },
@@ -37,9 +40,9 @@ export default function ArchiveMap() {
 
     mapRef.current = map;
 
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+    map.addControl(new NavigationControl({ showCompass: false }), "top-right");
 
-    const popup = new maplibregl.Popup({
+    const popup = new Popup({
       closeButton: true,
       closeOnClick: true,
       maxWidth: "320px",
@@ -71,7 +74,7 @@ export default function ArchiveMap() {
     };
   }, []);
 
-  useArchivePointsLayer(mapRef.current, popupRef.current, mapReady);
+  useArchivePointsLayer(mapRef, popupRef, mapReady);
 
   return <div ref={containerRef} className={styles.map} aria-label="Карта архивных снимков" />;
 }

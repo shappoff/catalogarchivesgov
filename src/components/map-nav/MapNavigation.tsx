@@ -88,10 +88,6 @@ function CompactRegionNav({ pathname }: { pathname: string }) {
   const triggerActive = Boolean(currentRegion);
 
   useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
     if (!open) {
       return;
     }
@@ -197,7 +193,7 @@ export default function MapNavigation() {
           );
         })}
       </div>
-      <CompactRegionNav pathname={pathname} />
+      <CompactRegionNav key={pathname} pathname={pathname} />
     </nav>
   );
 }

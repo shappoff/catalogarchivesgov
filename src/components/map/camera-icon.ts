@@ -16,8 +16,18 @@ export async function addCameraIcon(map: Map): Promise<void> {
   const image = new Image(30, 30);
 
   await new Promise<void>((resolve, reject) => {
-    image.onload = () => resolve();
-    image.onerror = () => reject(new Error("Failed to load camera icon"));
+    const timeoutId = window.setTimeout(() => {
+      reject(new Error("Timed out loading camera icon"));
+    }, 2000);
+
+    image.onload = () => {
+      window.clearTimeout(timeoutId);
+      resolve();
+    };
+    image.onerror = () => {
+      window.clearTimeout(timeoutId);
+      reject(new Error("Failed to load camera icon"));
+    };
     image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(CAMERA_ICON_SVG)}`;
   });
 

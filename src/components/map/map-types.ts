@@ -23,7 +23,7 @@ export const MAP_ATTRIBUTION =
 
 export const CATALOG_RECORD_URL = "https://catalog.archives.gov/id";
 
-export type ArchiveRegionId = "belarus" | "smolensk";
+export type ArchiveRegionId = "belarus" | "smolensk" | "bryansk";
 
 export type ArchiveRegion = {
   id: ArchiveRegionId;
@@ -53,6 +53,12 @@ export const SMOLENSK_BOUNDS: [[number, number], [number, number]] = [
   [35.14, 56.06],
 ];
 
+/** Bounding box covering all Bryansk archive points [west, south, east, north]. */
+export const BRYANSK_BOUNDS: [[number, number], [number, number]] = [
+  [31.94, 51.9],
+  [35.13, 53.99],
+];
+
 export const OPEN_FREE_MAP_STYLE =
   "https://tiles.openfreemap.org/styles/liberty";
 
@@ -77,6 +83,13 @@ export const ARCHIVE_REGIONS: Record<ArchiveRegionId, ArchiveRegion> = {
     label: "Смоленск",
     dataFile: "smolensk-points.geojson",
     bounds: SMOLENSK_BOUNDS,
+  },
+  bryansk: {
+    id: "bryansk",
+    path: "/bryansk",
+    label: "Брянск",
+    dataFile: "bryansk-points.geojson",
+    bounds: BRYANSK_BOUNDS,
   },
 };
 

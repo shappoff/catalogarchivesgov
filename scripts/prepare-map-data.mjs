@@ -16,6 +16,11 @@ const DATASETS = [
     output: "smolensk-points.geojson",
     useFilenames: false,
   },
+  {
+    input: "data/catalog-export-20260813104647.json",
+    output: "bryansk-points.geojson",
+    useFilenames: false,
+  },
 ];
 
 /**

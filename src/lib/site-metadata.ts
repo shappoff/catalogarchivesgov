@@ -8,6 +8,10 @@ export const SMOLENSK_TITLE = "Карта аэрофотосъемки Смол�
 export const SMOLENSK_DESCRIPTION =
   "Немецкие аэрофотоснимки Смоленской области времен ВОВ. С сайта catalog.archives.gov.";
 
+export const BRYANSK_TITLE = "Карта аэрофотосъемки Брянской области времен ВОВ";
+export const BRYANSK_DESCRIPTION =
+  "Немецкие аэрофотоснимки Брянской области времен ВОВ. С сайта catalog.archives.gov.";
+
 export function getSiteUrl(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   if (explicit) {

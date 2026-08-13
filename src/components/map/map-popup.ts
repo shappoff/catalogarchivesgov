@@ -46,7 +46,7 @@ export function buildPopupHtml(properties: PointProperties): string {
       ? `<ul class="map-popup__links">${urls
           .map(
             (url, index) =>
-              `<li><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Snapshot ${index + 1}</a></li>`,
+              `<li><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Снимок ${index + 1}</a></li>`,
           )
           .join("")}</ul>`
       : `<p class="map-popup__empty">No snapshots available</p>`;

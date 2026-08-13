@@ -5,7 +5,6 @@
   "scripts": {
     "predev": "node scripts/prepare-map-data.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/prepare-map-data.mjs",
     "build": "next build",
     "start": "next start",
     "prepare-map-data": "node scripts/prepare-map-data.mjs",

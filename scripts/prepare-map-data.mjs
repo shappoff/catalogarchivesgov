@@ -6,8 +6,16 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputDir = path.join(root, "public", "data");
 
 const DATASETS = [
-  { input: "data/belarus.json", output: "belarus-points.geojson", useFilenames: true },
-  { input: "data/smolensk.json", output: "smolensk-points.geojson", useFilenames: false },
+  {
+    input: "data/catalog-export-20260813100538.json",
+    output: "belarus-points.geojson",
+    useFilenames: true,
+  },
+  {
+    input: "data/catalog-export-20260813101801.json",
+    output: "smolensk-points.geojson",
+    useFilenames: false,
+  },
 ];
 
 /**
@@ -44,7 +52,7 @@ function roundCoord(value) {
  *   naId?: number | string;
  *   title?: string;
  *   title2?: string;
- *   _geoloc?: { lat?: string | number; lng?: string | number };
+ *   scopeAndContentNote?: string;
  *   digitalObjects?: DigitalObject[];
  *   productionDates?: ProductionDate[];
  * }} ArchiveRecord
@@ -113,6 +121,45 @@ function collectMedia(record, useFilenames) {
 }
 
 /**
+ * @param {unknown} note
+ * @returns {{ lat: number; lng: number; title2: string } | null}
+ */
+function parseScopeAndContentNote(note) {
+  if (typeof note !== "string" || note.length === 0) {
+    return null;
+  }
+
+  const separatorIndex = note.indexOf("-");
+  if (separatorIndex === -1) {
+    return null;
+  }
+
+  const coordsPart = note.slice(0, separatorIndex).trim();
+  const title2 = note.slice(separatorIndex + 1).trim();
+  const [latRaw, lngRaw] = coordsPart.split(",");
+  const lat = toFiniteNumber(latRaw);
+  const lng = toFiniteNumber(lngRaw);
+
+  if (lat === null || lng === null) {
+    return null;
+  }
+
+  return { lat, lng, title2 };
+}
+
+/**
+ * @param {ArchiveRecord} record
+ */
+function logMissingCoords(record) {
+  for (const object of record.digitalObjects ?? []) {
+    const url = toObjectUrl(object);
+    if (url) {
+      console.log(url);
+    }
+  }
+}
+
+/**
  * @param {Dataset} dataset
  */
 async function prepareDataset(dataset) {
@@ -132,10 +179,15 @@ async function prepareDataset(dataset) {
   let skipped = 0;
 
   for (const record of records) {
-    const lat = toFiniteNumber(record._geoloc?.lat);
-    const lng = toFiniteNumber(record._geoloc?.lng);
+    const parsed = parseScopeAndContentNote(record.scopeAndContentNote);
 
-    if (lat === null || lng === null || record.naId == null) {
+    if (!parsed) {
+      logMissingCoords(record);
+      skipped += 1;
+      continue;
+    }
+
+    if (record.naId == null) {
       skipped += 1;
       continue;
     }
@@ -149,7 +201,7 @@ async function prepareDataset(dataset) {
     const properties = {
       id: record.naId,
       t: record.title ?? "",
-      p: record.title2 ?? "",
+      p: parsed.title2,
       d: dates,
       n: media.length,
     };
@@ -164,7 +216,7 @@ async function prepareDataset(dataset) {
       type: "Feature",
       geometry: {
         type: "Point",
-        coordinates: [roundCoord(lng), roundCoord(lat)],
+        coordinates: [roundCoord(parsed.lng), roundCoord(parsed.lat)],
       },
       properties,
     });

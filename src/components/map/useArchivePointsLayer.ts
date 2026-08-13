@@ -28,7 +28,7 @@ async function loadRegionPoints(region: ArchiveRegion): Promise<FeatureCollectio
     throw new Error(`Failed to load ${region.id} points: ${response.status}`);
   }
 
-  const data = (await response.json()) as FeatureCollection;
+  const data: unknown = await response.json();
   const hydrated = hydrateArchivePoints(data, region);
   pointsCache[region.id] = hydrated;
   return hydrated;

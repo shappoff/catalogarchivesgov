@@ -174,7 +174,7 @@ async function prepareDataset(dataset) {
     throw new Error(`${dataset.input} must contain an array of records`);
   }
 
-  /** @type {GeoJSON.Feature[]} */
+  /** @type {Record<string, unknown>[]} */
   const features = [];
   let skipped = 0;
 
@@ -198,37 +198,32 @@ async function prepareDataset(dataset) {
       .filter((value) => value.length > 0);
 
     /** @type {Record<string, unknown>} */
-    const properties = {
-      id: record.naId,
-      t: record.title ?? "",
-      p: parsed.title2,
-      d: dates,
-      n: media.length,
+    const point = {
+      c: [roundCoord(parsed.lng), roundCoord(parsed.lat)],
+      i: record.naId,
     };
 
-    if (dataset.useFilenames) {
-      properties.f = media;
-    } else {
-      properties.urls = media;
+    if (record.title) {
+      point.t = record.title;
+    }
+    if (parsed.title2) {
+      point.p = parsed.title2;
+    }
+    if (dates.length > 0) {
+      point.d = dates;
+    }
+    if (media.length > 0) {
+      if (dataset.useFilenames) {
+        point.f = media;
+      } else {
+        point.u = media;
+      }
     }
 
-    features.push({
-      type: "Feature",
-      geometry: {
-        type: "Point",
-        coordinates: [roundCoord(parsed.lng), roundCoord(parsed.lat)],
-      },
-      properties,
-    });
+    features.push(point);
   }
 
-  /** @type {GeoJSON.FeatureCollection} */
-  const collection = {
-    type: "FeatureCollection",
-    features,
-  };
-
-  await writeFile(outputPath, JSON.stringify(collection));
+  await writeFile(outputPath, JSON.stringify(features));
 
   console.log(
     `Prepared ${features.length} points → ${path.relative(root, outputPath)}` +

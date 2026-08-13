@@ -6,8 +6,16 @@ export type PointProperties = {
   p: string;
   d: string | string[];
   urls: string[];
-  n: number;
+};
+
+export type CompactArchivePoint = {
+  c: [number, number];
+  i: number | string;
+  t?: string;
+  p?: string;
+  d?: string | string[];
   f?: string | string[];
+  u?: string | string[];
 };
 
 export const MAP_ATTRIBUTION =
@@ -127,30 +135,44 @@ export function joinArchiveImageUrl(baseUrl: string | undefined, value: string):
 }
 
 export function hydrateArchivePoints(
-  data: FeatureCollection,
+  data: unknown,
   region: ArchiveRegion,
 ): FeatureCollection {
+  const points = Array.isArray(data) ? data : [];
+
   return {
     type: "FeatureCollection",
-    features: data.features.map((feature) => {
-      const properties = feature.properties as PointProperties | null;
-      if (!properties) {
-        return feature;
+    features: points.flatMap((item) => {
+      if (!item || typeof item !== "object") {
+        return [];
       }
 
-      const filenames = parseStringList(properties.f);
-      const existingUrls = parseStringList(properties.urls);
+      const point = item as CompactArchivePoint;
+      if (!Array.isArray(point.c) || point.c.length < 2 || point.i == null) {
+        return [];
+      }
+
+      const filenames = parseStringList(point.f);
+      const existingUrls = parseStringList(point.u);
       const sources = filenames.length > 0 ? filenames : existingUrls;
       const urls = sources.map((value) => joinArchiveImageUrl(region.imageBaseUrl, value));
 
-      return {
-        ...feature,
-        properties: {
-          ...properties,
-          urls,
-          n: typeof properties.n === "number" ? properties.n : urls.length,
+      return [
+        {
+          type: "Feature" as const,
+          geometry: {
+            type: "Point" as const,
+            coordinates: [point.c[0], point.c[1]],
+          },
+          properties: {
+            id: point.i,
+            t: point.t ?? "",
+            p: point.p ?? "",
+            d: point.d ?? [],
+            urls,
+          },
         },
-      };
+      ];
     }),
   };
 }

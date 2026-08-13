@@ -20,6 +20,10 @@ export const LITHUANIA_TITLE = "Карта аэрофотосъемки Литв
 export const LITHUANIA_DESCRIPTION =
   "Немецкие аэрофотоснимки Литвы времен ВОВ. С сайта catalog.archives.gov.";
 
+export const LATVIA_TITLE = "Карта аэрофотосъемки Латвии времен ВОВ";
+export const LATVIA_DESCRIPTION =
+  "Немецкие аэрофотоснимки Латвии времен ВОВ. С сайта catalog.archives.gov.";
+
 export function getSiteUrl(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   if (explicit) {

@@ -23,7 +23,13 @@ export const MAP_ATTRIBUTION =
 
 export const CATALOG_RECORD_URL = "https://catalog.archives.gov/id";
 
-export type ArchiveRegionId = "belarus" | "smolensk" | "bryansk" | "pskov" | "lithuania";
+export type ArchiveRegionId =
+  | "belarus"
+  | "smolensk"
+  | "bryansk"
+  | "pskov"
+  | "lithuania"
+  | "latvia";
 
 export type ArchiveRegion = {
   id: ArchiveRegionId;
@@ -71,6 +77,12 @@ export const LITHUANIA_BOUNDS: [[number, number], [number, number]] = [
   [25.7, 56.58],
 ];
 
+/** Bounding box covering all Latvia archive points [west, south, east, north]. */
+export const LATVIA_BOUNDS: [[number, number], [number, number]] = [
+  [21.5, 55.98],
+  [26.34, 57.82],
+];
+
 export const OPEN_FREE_MAP_STYLE =
   "https://tiles.openfreemap.org/styles/liberty";
 
@@ -116,6 +128,13 @@ export const ARCHIVE_REGIONS: Record<ArchiveRegionId, ArchiveRegion> = {
     label: "Литва",
     dataFile: "lithuania-points.geojson",
     bounds: LITHUANIA_BOUNDS,
+  },
+  latvia: {
+    id: "latvia",
+    path: "/latvia",
+    label: "Латвия",
+    dataFile: "latvia-points.geojson",
+    bounds: LATVIA_BOUNDS,
   },
 };
 

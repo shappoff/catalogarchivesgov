@@ -31,6 +31,11 @@ const DATASETS = [
     output: "lithuania-points.geojson",
     useFilenames: false,
   },
+  {
+    input: "data/catalog-export-20260813110816.json",
+    output: "latvia-points.geojson",
+    useFilenames: false,
+  },
 ];
 
 /**

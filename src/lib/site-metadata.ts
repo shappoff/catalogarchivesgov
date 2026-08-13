@@ -18,6 +18,21 @@ export function getSiteUrl(): string {
   return `https://shappoff.github.io${basePath}`.replace(/\/$/, "") || "https://shappoff.github.io";
 }
 
+/** Site-relative path with `basePath` and a trailing slash (`trailingSlash: true`). */
+export function toPublicPath(pathname: string): string {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH?.trim() ?? "";
+  const normalized =
+    pathname === "/"
+      ? "/"
+      : `${(pathname.startsWith("/") ? pathname : `/${pathname}`).replace(/\/$/, "")}/`;
+
+  if (normalized === "/") {
+    return basePath ? `${basePath}/` : "/";
+  }
+
+  return `${basePath}${normalized}`;
+}
+
 /** Absolute URL with a trailing slash to match `trailingSlash: true`. */
 export function toAbsoluteUrl(pathname: string): string {
   const origin = getSiteUrl();

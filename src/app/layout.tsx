@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "ru_RU",
-    url: "/",
+    url: "/belarus",
     siteName: BELARUS_TITLE,
     title: BELARUS_TITLE,
     description: BELARUS_DESCRIPTION,

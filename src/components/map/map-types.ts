@@ -7,6 +7,7 @@ export type PointProperties = {
   d: string | string[];
   urls: string[];
   n: number;
+  f?: string | string[];
 };
 
 export const MAP_ATTRIBUTION =
@@ -22,6 +23,7 @@ export type ArchiveRegion = {
   label: string;
   dataFile: string;
   bounds: [[number, number], [number, number]];
+  imageBaseUrl?: string;
 };
 
 export const POINTS_SOURCE_ID = "archive-points";
@@ -58,6 +60,8 @@ export const ARCHIVE_REGIONS: Record<ArchiveRegionId, ArchiveRegion> = {
     label: "Беларусь",
     dataFile: "belarus-points.geojson",
     bounds: BELARUS_BOUNDS,
+    imageBaseUrl:
+      "https://s3.dualstack.us-east-1.amazonaws.com/NARAprodstorage/lz/cartographic/rg-373/306065/Batch0017/",
   },
   smolensk: {
     id: "smolensk",
@@ -93,4 +97,60 @@ export function getArchiveRegion(pathname: string): ArchiveRegion | null {
 export function getArchivePointsUrl(region: ArchiveRegion): string {
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   return `${basePath}/data/${region.dataFile}`;
+}
+
+export function parseStringList(raw: unknown): string[] {
+  if (Array.isArray(raw)) {
+    return raw.filter((item): item is string => typeof item === "string" && item.length > 0);
+  }
+
+  if (typeof raw === "string" && raw.length > 0) {
+    try {
+      const parsed: unknown = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        return parsed.filter((item): item is string => typeof item === "string" && item.length > 0);
+      }
+    } catch {
+      return [raw];
+    }
+  }
+
+  return [];
+}
+
+export function joinArchiveImageUrl(baseUrl: string | undefined, value: string): string {
+  if (value.startsWith("http://") || value.startsWith("https://")) {
+    return value;
+  }
+
+  return `${baseUrl ?? ""}${value}`;
+}
+
+export function hydrateArchivePoints(
+  data: FeatureCollection,
+  region: ArchiveRegion,
+): FeatureCollection {
+  return {
+    type: "FeatureCollection",
+    features: data.features.map((feature) => {
+      const properties = feature.properties as PointProperties | null;
+      if (!properties) {
+        return feature;
+      }
+
+      const filenames = parseStringList(properties.f);
+      const existingUrls = parseStringList(properties.urls);
+      const sources = filenames.length > 0 ? filenames : existingUrls;
+      const urls = sources.map((value) => joinArchiveImageUrl(region.imageBaseUrl, value));
+
+      return {
+        ...feature,
+        properties: {
+          ...properties,
+          urls,
+          n: typeof properties.n === "number" ? properties.n : urls.length,
+        },
+      };
+    }),
+  };
 }

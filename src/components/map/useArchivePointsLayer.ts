@@ -10,6 +10,7 @@ import {
   POINTS_SOURCE_ID,
   getArchivePointsUrl,
   getArchiveRegion,
+  hydrateArchivePoints,
   type ArchiveRegion,
   type ArchiveRegionId,
 } from "./map-types";
@@ -28,8 +29,9 @@ async function loadRegionPoints(region: ArchiveRegion): Promise<FeatureCollectio
   }
 
   const data = (await response.json()) as FeatureCollection;
-  pointsCache[region.id] = data;
-  return data;
+  const hydrated = hydrateArchivePoints(data, region);
+  pointsCache[region.id] = hydrated;
+  return hydrated;
 }
 
 export function useArchivePointsLayer(

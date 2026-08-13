@@ -1,4 +1,4 @@
-import { CATALOG_RECORD_URL, type PointProperties } from "./map-types";
+import { CATALOG_RECORD_URL, parseStringList, type PointProperties } from "./map-types";
 
 function escapeHtml(value: string): string {
   return value
@@ -7,25 +7,6 @@ function escapeHtml(value: string): string {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
-}
-
-function parseStringList(raw: unknown): string[] {
-  if (Array.isArray(raw)) {
-    return raw.filter((item): item is string => typeof item === "string" && item.length > 0);
-  }
-
-  if (typeof raw === "string" && raw.length > 0) {
-    try {
-      const parsed: unknown = JSON.parse(raw);
-      if (Array.isArray(parsed)) {
-        return parsed.filter((item): item is string => typeof item === "string" && item.length > 0);
-      }
-    } catch {
-      return [raw];
-    }
-  }
-
-  return [];
 }
 
 function buildCatalogLink(id: PointProperties["id"]): string {

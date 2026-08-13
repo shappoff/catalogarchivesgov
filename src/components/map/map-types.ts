@@ -115,6 +115,13 @@ export const ARCHIVE_REGIONS: Record<ArchiveRegionId, ArchiveRegion> = {
     dataFile: "smolensk-points.geojson",
     bounds: SMOLENSK_BOUNDS,
   },
+  moscow: {
+    id: "moscow",
+    path: "/moscow",
+    label: "Москва",
+    dataFile: "moscow-points.geojson",
+    bounds: MOSCOW_BOUNDS,
+  },
   bryansk: {
     id: "bryansk",
     path: "/bryansk",
@@ -142,13 +149,6 @@ export const ARCHIVE_REGIONS: Record<ArchiveRegionId, ArchiveRegion> = {
     label: "Латвия",
     dataFile: "latvia-points.geojson",
     bounds: LATVIA_BOUNDS,
-  },
-  moscow: {
-    id: "moscow",
-    path: "/moscow",
-    label: "Москва",
-    dataFile: "moscow-points.geojson",
-    bounds: MOSCOW_BOUNDS,
   },
 };
 

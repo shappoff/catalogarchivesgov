@@ -1,9 +1,8 @@
 import type { NextConfig } from "next";
 
-const basePath = process.env.BASE_PATH ?? "";
+const basePath = process.env.BASE_PATH ?? "/catalogarchivesgov";
 
 const nextConfig: NextConfig = {
-  output: "export",
   trailingSlash: true,
   images: {
     unoptimized: true,

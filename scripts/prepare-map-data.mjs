@@ -17,6 +17,11 @@ const DATASETS = [
     useFilenames: false,
   },
   {
+    input: "data/catalog-export-20260813111302.json",
+    output: "moscow-points.geojson",
+    useFilenames: false,
+  },
+  {
     input: "data/catalog-export-20260813104647.json",
     output: "bryansk-points.geojson",
     useFilenames: false,

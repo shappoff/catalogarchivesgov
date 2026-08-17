@@ -1,38 +1,38 @@
 import type { Metadata } from "next";
 
-export const BELARUS_TITLE = "Карта аэрофотосъемки Беларуси времен ВОВ";
+export const BELARUS_TITLE = "Карта аэрофотосъемки Беларуси времен ВОВ| shappoff";
 export const BELARUS_DESCRIPTION =
   "Немецкие аэрофотоснимки Беларуси времен ВОВ. С сайта catalog.archives.gov.";
 
-export const SMOLENSK_TITLE = "Карта аэрофотосъемки Смоленской области времен ВОВ";
+export const SMOLENSK_TITLE = "Карта аэрофотосъемки Смоленской области времен ВОВ| shappoff";
 export const SMOLENSK_DESCRIPTION =
   "Немецкие аэрофотоснимки Смоленской области времен ВОВ. С сайта catalog.archives.gov.";
 
-export const BRYANSK_TITLE = "Карта аэрофотосъемки Брянской области времен ВОВ";
+export const BRYANSK_TITLE = "Карта аэрофотосъемки Брянской области времен ВОВ| shappoff";
 export const BRYANSK_DESCRIPTION =
   "Немецкие аэрофотоснимки Брянской области времен ВОВ. С сайта catalog.archives.gov.";
 
-export const PSKOV_TITLE = "Карта аэрофотосъемки Псковской области времен ВОВ";
+export const PSKOV_TITLE = "Карта аэрофотосъемки Псковской области времен ВОВ| shappoff";
 export const PSKOV_DESCRIPTION =
   "Немецкие аэрофотоснимки Псковской области времен ВОВ. С сайта catalog.archives.gov.";
 
-export const LITHUANIA_TITLE = "Карта аэрофотосъемки Литвы времен ВОВ";
+export const LITHUANIA_TITLE = "Карта аэрофотосъемки Литвы времен ВОВ| shappoff";
 export const LITHUANIA_DESCRIPTION =
   "Немецкие аэрофотоснимки Литвы времен ВОВ. С сайта catalog.archives.gov.";
 
-export const LATVIA_TITLE = "Карта аэрофотосъемки Латвии времен ВОВ";
+export const LATVIA_TITLE = "Карта аэрофотосъемки Латвии времен ВОВ| shappoff";
 export const LATVIA_DESCRIPTION =
   "Немецкие аэрофотоснимки Латвии времен ВОВ. С сайта catalog.archives.gov.";
 
-export const MOSCOW_TITLE = "Карта аэрофотосъемки Москвы времен ВОВ";
+export const MOSCOW_TITLE = "Карта аэрофотосъемки Москвы времен ВОВ| shappoff";
 export const MOSCOW_DESCRIPTION =
   "Немецкие аэрофотоснимки Москвы времен ВОВ. С сайта catalog.archives.gov.";
 
-export const UKRAINE_TITLE = "Карта аэрофотосъемки Украины времен ВОВ";
+export const UKRAINE_TITLE = "Карта аэрофотосъемки Украины времен ВОВ| shappoff";
 export const UKRAINE_DESCRIPTION =
   "Немецкие аэрофотоснимки Украины времен ВОВ. С сайта catalog.archives.gov.";
 
-export const POLAND_TITLE = "Карта аэрофотосъемки Польши времен ВОВ";
+export const POLAND_TITLE = "Карта аэрофотосъемки Польши времен ВОВ| shappoff";
 export const POLAND_DESCRIPTION =
   "Немецкие аэрофотоснимки Польши времен ВОВ. С сайта catalog.archives.gov.";
 

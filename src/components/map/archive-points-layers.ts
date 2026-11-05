@@ -18,7 +18,7 @@ export function addArchivePointsLayers(map: Map, popup: Popup): void {
   map.addSource(POINTS_SOURCE_ID, {
     type: "geojson",
     data: EMPTY_FEATURE_COLLECTION,
-    cluster: true,
+    cluster: false,
     clusterMaxZoom: CLUSTER_MAX_ZOOM,
     clusterRadius: CLUSTER_RADIUS,
     maxzoom: CLUSTER_MAX_ZOOM + 1,
